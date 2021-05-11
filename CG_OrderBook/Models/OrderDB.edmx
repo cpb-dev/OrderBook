@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="dbOrderBookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="brands_list">
+          <Key>
+            <PropertyRef Name="Brand_ID" />
+          </Key>
+          <Property Name="Brand_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brand_Name" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customer_info">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="F_Name" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="S_Name" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <EntityType Name="order_info">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Customer_ID" Type="int" Nullable="false" />
+          <Property Name="OrderDate" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Paid" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="OrderStatus" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Notes" Type="text" />
+        </EntityType>
+        <EntityType Name="order_items">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="int" Nullable="false" />
+          <Property Name="Product_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product_info">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Brand" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Style_Code" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Specification" Type="text" />
+        </EntityType>
+        <Association Name="FK_order_info_ToTable_Customer">
+          <End Role="customer_info" Type="Self.customer_info" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_info" Type="Self.order_info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer_info">
+              <PropertyRef Name="Customer_ID" />
+            </Principal>
+            <Dependent Role="order_info">
+              <PropertyRef Name="Customer_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_items_ToTable_Order">
+          <End Role="order_info" Type="Self.order_info" Multiplicity="1" />
+          <End Role="order_items" Type="Self.order_items" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="order_info">
+              <PropertyRef Name="Order_ID" />
+            </Principal>
+            <Dependent Role="order_items">
+              <PropertyRef Name="Order_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_items_ToTable_Product">
+          <End Role="product_info" Type="Self.product_info" Multiplicity="1" />
+          <End Role="order_items" Type="Self.order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_info">
+              <PropertyRef Name="Product_ID" />
+            </Principal>
+            <Dependent Role="order_items">
+              <PropertyRef Name="Product_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbOrderBookModelStoreContainer">
+          <EntitySet Name="brands_list" EntityType="Self.brands_list" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="customer_info" EntityType="Self.customer_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_info" EntityType="Self.order_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_items" EntityType="Self.order_items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="product_info" EntityType="Self.product_info" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_order_info_ToTable_Customer" Association="Self.FK_order_info_ToTable_Customer">
+            <End Role="customer_info" EntitySet="customer_info" />
+            <End Role="order_info" EntitySet="order_info" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_items_ToTable_Order" Association="Self.FK_order_items_ToTable_Order">
+            <End Role="order_info" EntitySet="order_info" />
+            <End Role="order_items" EntitySet="order_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_items_ToTable_Product" Association="Self.FK_order_items_ToTable_Product">
+            <End Role="product_info" EntitySet="product_info" />
+            <End Role="order_items" EntitySet="order_items" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbOrderBookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="brands_list">
+          <Key>
+            <PropertyRef Name="Brand_ID" />
+          </Key>
+          <Property Name="Brand_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Brand_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customer_info">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="F_Name" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="S_Name" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="order_info" Relationship="Self.FK_order_info_ToTable_Customer" FromRole="customer_info" ToRole="order_info" />
+        </EntityType>
+        <EntityType Name="order_info">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Customer_ID" Type="Int32" Nullable="false" />
+          <Property Name="OrderDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Paid" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OrderStatus" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_info" Relationship="Self.FK_order_info_ToTable_Customer" FromRole="order_info" ToRole="customer_info" />
+          <NavigationProperty Name="product_info" Relationship="Self.order_items" FromRole="order_info" ToRole="product_info" />
+        </EntityType>
+        <EntityType Name="product_info">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Product_Name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Brand" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Style_Code" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Specification" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="order_info" Relationship="Self.order_items" FromRole="product_info" ToRole="order_info" />
+        </EntityType>
+        <Association Name="FK_order_info_ToTable_Customer">
+          <End Role="customer_info" Type="Self.customer_info" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_info" Type="Self.order_info" Multiplicity="*" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="customer_info">
+              <PropertyRef Name="Customer_ID" />
+            </Principal>
+            <Dependent Role="order_info">
+              <PropertyRef Name="Customer_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="order_items">
+          <End Role="order_info" Type="Self.order_info" Multiplicity="*" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="product_info" Type="Self.product_info" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
+        </Association>
+        <EntityContainer Name="dbOrderBookEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="brands_list" EntityType="Self.brands_list" />
+          <EntitySet Name="customer_info" EntityType="Self.customer_info" />
+          <EntitySet Name="order_info" EntityType="Self.order_info" />
+          <EntitySet Name="product_info" EntityType="Self.product_info" />
+          <AssociationSet Name="FK_order_info_ToTable_Customer" Association="Self.FK_order_info_ToTable_Customer">
+            <End Role="customer_info" EntitySet="customer_info" />
+            <End Role="order_info" EntitySet="order_info" />
+          </AssociationSet>
+          <AssociationSet Name="order_items" Association="Self.order_items">
+            <End Role="order_info" EntitySet="order_info" />
+            <End Role="product_info" EntitySet="product_info" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbOrderBookModelStoreContainer" CdmEntityContainer="dbOrderBookEntities">
+          <EntitySetMapping Name="brands_list">
+            <EntityTypeMapping TypeName="dbOrderBookModel.brands_list">
+              <MappingFragment StoreEntitySet="brands_list">
+                <ScalarProperty Name="Brand_ID" ColumnName="Brand_ID" />
+                <ScalarProperty Name="Brand_Name" ColumnName="Brand_Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_info">
+            <EntityTypeMapping TypeName="dbOrderBookModel.customer_info">
+              <MappingFragment StoreEntitySet="customer_info">
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="F_Name" ColumnName="F_Name" />
+                <ScalarProperty Name="S_Name" ColumnName="S_Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="order_info">
+            <EntityTypeMapping TypeName="dbOrderBookModel.order_info">
+              <MappingFragment StoreEntitySet="order_info">
+                <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product_info">
+            <EntityTypeMapping TypeName="dbOrderBookModel.product_info">
+              <MappingFragment StoreEntitySet="product_info">
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Style_Code" ColumnName="Style_Code" />
+                <ScalarProperty Name="Specification" ColumnName="Specification" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="order_items" TypeName="dbOrderBookModel.order_items" StoreEntitySet="order_items">
+            <EndProperty Name="order_info">
+              <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+            </EndProperty>
+            <EndProperty Name="product_info">
+              <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
